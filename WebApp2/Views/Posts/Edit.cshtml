@@ -1,0 +1,51 @@
+﻿@model WebApp2.ViewModels.EditPostModel
+
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h4>Вы редактируете пост @Model.Caption</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Caption" class="control-label"></label>
+                <input asp-for="Caption" class="form-control" />
+                <span asp-validation-for="Caption" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div>
+                <img src="@Model.Path_postimg" max-width="100" max-height="auto" class="images" alt="" & onerror="this.style.display = 'none'" />
+            </div>
+            <h3>Выбрать другое фото</h3>
+            <div class="form-group" enctype="multipart/form-data">
+                <input asp-for="PostImage" type="file" name="PostImage" accept="image/*" /><br>
+
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="UserId" value="@UserManager.GetUserId(User)" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Вернуться на главную</a>
+</div>
+
+</textarea>

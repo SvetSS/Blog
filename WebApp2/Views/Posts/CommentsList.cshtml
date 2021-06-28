@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WebApp2.Models.Comment>
+
+<h4>Комментарии</h4>
+<table class="table">
+ 
+@foreach (var item in Model) {
+        <tr>
+            <td >
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+        </tr>
+}
+   
+</table>

@@ -1,0 +1,151 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
+@using WebApp2.Options
+
+@using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@using WebApp2.ViewModels
+@model WebApp2.Models.Post
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@inject IOptions<AppOptions> AppOptions
+@inject IOptions<ReCaptchaOptions> ReCaptchaOptions
+<h2 class="post_caption">@Model.Caption</h2>
+<div class="post_img">
+    <img src="@Model.PostImagePath" max-width="500" max-height="auto" class="images" alt="" & onerror="this.style.display = 'none'" />
+</div>
+
+<div class="post_txt">
+    @Model.Content
+</div>
+<div class="likes_date">
+    <div id="postdiv" class="likes">
+        <input type="image" value="" max-width="7px" height="auto" alt="button" src="/images/heart.png" onclick="addLikePost(@Model.Id)" />
+        (<span id="likes-@Model.Id">@Model.Likes</span>)
+    </div>
+    <div class="date">
+        @Model.DateCreated
+    </div>
+</div>
+<a asp-action="Edit" asp-route-id="@Model.Id">Редактировать пост</a>
+<a asp-action="Delete" asp-route-id="@Model.Id">Удалить пост</a>
+
+
+<div class="comments">
+    <dl class="dl-horizontal" id="comments_container">
+        @{
+
+        }
+        @await Html.PartialAsync("CommentsList", @Model.Comments);
+
+    </dl>
+</div>
+<div id="commentsDiv">
+
+    <div id="sendComment-@Model.Id">
+        <form onsubmit="return false" id="sendcomm">
+            <textarea id="commentTextInput" required></textarea>
+            <br />
+            <input type="email" id="authCommentEmail" placeholder="e-mail" required>
+            <br />
+            @*<div class="">
+                <div class="g-recaptcha captcha_position" id="captcha-result" data-sitekey="@AppOptions.Value.ReCaptcha.SiteKey"></div>
+                здесь будет рекапча
+                @Html.ValidationMessage("reCaptchaError")
+            </div>*@
+            <input type="submit" onclick="sendComment('@Model.Id', '@User.Identity.Name')" value="Отправить" />
+        </form>
+    </div>
+
+
+
+</div>
+
+@section Scripts
+    {
+    @*@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (e) {
+                var recaptcha = $("#g-recaptcha-response").val();
+                if (recaptcha === "") {
+                    e.preventDefault();
+                    alert("Подтвердите");
+                }
+            });
+        });
+    </script> скрипт для проверки рекапчи*@
+    
+    
+
+    <script>
+       
+    </script>
+    <script>
+        $( document ).ready(function() {
+            $.ajax({
+                url: '@Url.Action("CommentsList", "Posts")',
+                type: 'POST',
+                data: { 'postId': @Model.Id },
+                success: function(data) {
+
+                    $('#comments_container').html('<div>' + data + '</div>');
+
+                },
+                error: function(data) {
+                    console.log('Ошибка во время отправки комментария');
+                }
+            });
+        });
+        function sendComment(postId) {
+            var authComEmail = $("#authCommentEmail").val();
+            var commTextInput = $("#commentTextInput").val();
+            if (commTextInput === "") {
+                sendComment.preventDefault();
+            }
+            else  if (authComEmail === "") {
+                sendComment.preventDefault();
+                alert("заполните поле");
+            }
+            $.ajax({
+                url: '@Url.Action("AjaxComment", "Posts")',
+                type: 'POST',
+
+                data: { 'postId': postId, 'login': $('#authCommentEmail').val(), 'content': $('#commentTextInput').val() },
+                success: function(data) {
+                    console.log('все ок');
+                    console.log(data);
+                    $('#comments_container').append('<div>' + data + '</div>');
+                },
+                error: function(data) {
+                    console.log('Ошибка во время отправки комментария');
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        function addLikePost(postId) {
+            $.ajax({
+                url: '@Url.Action("Like", "Posts")',
+                type: 'POST',
+                data: { 'postId': postId },
+                success: function(data) {
+                    $('#likes-' + postId).html(data);
+                },
+                error: console.log('Ошибка ')
+            });
+        }
+    </script>
+
+
+}
+

@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<WebApp2.Models.Post>
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Форум</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Caption)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.PostImagePath)*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Likes)
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.User.Email)*@Пользователь
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Caption)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <img src="@item.PostImagePath" width="70" height="70" class="images" alt="" & onerror="this.style.display='none'" />
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Likes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">Прочитать</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row row-cols-1 row-cols-md-2">
+@foreach (var item in Model)
+{<div class="col mb-4">
+     <div class="card " style="">
+         <img src="@item.PostImagePath" max-width="" max-height="" class="card-img-top"  alt="" & onerror="this.style.display = 'none'" />
+         <div class="card-body">
+             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Caption)</h5>
+             <p class="card-text">@Html.DisplayFor(modelItem => item.Content)</p>
+             <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Читать</a>
+         </div>
+     </div>
+     </div>
+    }
+</div>
+
+<script>
+
+</script>

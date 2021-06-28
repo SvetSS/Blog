@@ -1,0 +1,73 @@
+﻿@model IEnumerable<WebApp2.Models.Post>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Caption)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Likes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Caption)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <img src="@item.PostImagePath" max-width="100" max-height="auto" class="images" alt="" & onerror="this.style.display = 'none'" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Likes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Читать</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@foreach (var item in Model) { 
+    <div max-width="100%">
+        <div class="card" style="width: 18rem;">
+            <img src="@item.PostImagePath" max-width="100" max-height="auto" class="images" alt="" & onerror="this.style.display = 'none'" />
+            <div class="card-body">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Caption)</h5>
+                <p class="card-text">@Html.DisplayFor(modelItem => item.Content)</p>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Читать</a>
+            </div>
+        </div>
+    </div>
+}
